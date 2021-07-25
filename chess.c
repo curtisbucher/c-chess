@@ -89,12 +89,12 @@ const char *bitboard_to_FEN(chessboard board)
             if (board.en_passant & (0x0000010000000000 << i))
             {
                 fen[++f] = 'a' + i;
-                fen[++f] = '3';
+                fen[++f] = '6';
             }
-            else if (board.en_passant & (0x0000000000100000 << i))
+            else if (board.en_passant & (0x0000000000010000 << i))
             {
                 fen[++f] = 'a' + i;
-                fen[++f] = '6';
+                fen[++f] = '3';
             }
         }
 
@@ -195,12 +195,65 @@ chessboard FEN_to_board(const char *fen)
             break;
         }
     }
+    // White to move
+    board.wtm = (fen[++i] == 'w');
+
+    // Castling rights
+    i += 2;
+    while (fen[i] != ' ')
+    {
+        switch (fen[i++])
+        {
+        case 'K':
+            board.castling |= WHITE_KINGSIDE;
+            break;
+        case 'Q':
+            board.castling |= WHITE_QUEENSIDE;
+            break;
+        case 'k':
+            board.castling |= BLACK_KINGSIDE;
+            break;
+        case 'q':
+            board.castling |= BLACK_QUEENSIDE;
+            break;
+        default:
+            break;
+        }
+    }
+    i += 1;
+
+    // // En passant
+    if (fen[i] == '-')
+    {
+        board.en_passant = 0;
+        i++;
+    }
+    else
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (fen[i] == 'a' + j)
+            {
+                board.en_passant |= ((1L << j) << (fen[++i] - '1') * 8);
+            }
+        }
+    }
+
+    // Fullmove and halfmove clock
+    i += 1;
+    board.halfmove = atoi(fen + i);
+
+    while (fen[i] != ' ')
+        i++;
+
+    board.fullmove = atoi(fen + i);
+
     return board;
 }
 
 int main()
 {
-    const char fen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0";
+    const char fen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b kq a6 56 78";
     printf("https://lichess.org/editor/%s\n", fen);
     chessboard board = FEN_to_board(fen);
 
