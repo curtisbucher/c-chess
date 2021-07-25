@@ -108,62 +108,64 @@ const char *bitboard_to_FEN(chessboard board)
 chessboard FEN_to_board(const char *fen)
 {
     // Converts a FEN string to a chessboard struct.
-    chessboard board = DEFAULT_BOARD;
+    // STILL NEEDS TO SET FLAGS
+    chessboard board = {0};
     int i = 0;
     int f = 0;
-    board.wr = 0;
-    board.wn = 0;
-    board.wb = 0;
-    board.wq = 0;
-    board.wk = 0;
-    board.wp = 0;
-    board.br = 0;
-    board.bn = 0;
-    board.bb = 0;
-    board.bq = 0;
-    board.bk = 0;
-    board.bp = 0;
 
     while (fen[i] != ' ')
     {
-        //printf("%c\n", fen[i]);
+        //Generating a mask by using gnarly math to iterate from the left to right, top to bottom.
+        unsigned long mask = (1L << (((63 - f) / 8) * 8 + (7 - (63 - f) % 8)));
         switch (fen[i++])
         {
         case 'r':
-            board.br |= (1L << (63 - f++));
+            board.br |= mask;
+            f++;
             break;
         case 'n':
-            board.bn |= (1L << (63 - f++));
+            board.bn |= mask;
+            f++;
             break;
         case 'b':
-            board.bb |= (1L << (63 - f++));
+            board.bb |= mask;
+            f++;
             break;
         case 'q':
-            board.bq |= (1L << (63 - f++));
+            board.bq |= mask;
+            f++;
             break;
         case 'k':
-            board.bk |= (1L << (63 - f++));
+            board.bk |= mask;
+            f++;
             break;
         case 'p':
-            board.bp |= (1L << (63 - f++));
+            board.bp |= mask;
+            f++;
             break;
         case 'R':
-            board.wr |= (1L << (63 - f++));
+            board.wr |= mask;
+            f++;
             break;
         case 'N':
-            board.wn |= (1L << (63 - f++));
+            board.wn |= mask;
+            f++;
             break;
         case 'B':
-            board.wb |= (1L << (63 - f++));
+            board.wb |= mask;
+            f++;
             break;
         case 'Q':
-            board.wq |= (1L << (63 - f++));
+            board.wq |= mask;
+            f++;
             break;
         case 'K':
-            board.wk |= (1L << (63 - f++));
+            board.wk |= mask;
+            f++;
             break;
         case 'P':
-            board.wp |= (1L << (63 - f++));
+            board.wp |= mask;
+            f++;
             break;
         case '1':
             f += 1;
@@ -198,11 +200,6 @@ chessboard FEN_to_board(const char *fen)
 
 int main()
 {
-    // printf() displays the string inside quotation
-    // chessboard board = DEFAULT_BOARD;
-    // const char *fen = bitboard_to_FEN(board);
-    // printf("%s", fen);
-
     const char fen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0";
     printf("https://lichess.org/editor/%s\n", fen);
     chessboard board = FEN_to_board(fen);
