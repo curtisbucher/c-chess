@@ -1,0 +1,19 @@
+chessboard STARTING_BOARD = {
+    .wp = RANK_2,                     // 0000 0000 .... 1111 1111 0000 1000
+    .bp = RANK_7,                     // 0000 0000 1111 1111 .... 0000 0000
+    .wr = A1 | H1,                    // 0000 0000 .... 1000 0001
+    .br = A8 | H8,                    // 1000 0001 .... 0000 0000
+    .wn = B1 | G1,                    // 0000 0000 .... 0100 0010
+    .bn = B8 | G8,                    // 0100 0010 .... 0000 0000
+    .wb = C1 | F1,                    // 0000 0000 .... 0010 0100
+    .bb = C8 | F8,                    // 0010 0100 .... 0000 0000
+    .wq = D1,                         // 0000 0000 .... 0000 1000
+    .bq = D8,                         // 0000 1000 .... 0000 0000
+    .wk = E1,                         // 0000 0000 .... 0001 0000
+    .bk = E8,                         // 0001 0000 .... 0000 0000
+    .wtm = true,                      // White to move
+    .castling = 0b1111,               // whitekingside, whitequeenside, blackkingside, blackqueenside mask
+    .en_passant = 0x0000000000000000, // a bitboard for the en passant square(s)
+    .halfmove = 0,                    // the halfmove clock,
+    .fullmove = 0,                    // the fullmove number
+};

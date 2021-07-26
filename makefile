@@ -1,4 +1,4 @@
 run:
-	@gcc chess.c -o chess
+	@gcc *.c -o chess
 	@./chess
 	@echo
