@@ -11,8 +11,9 @@
 #define FUNCTIONS_H_INCLUDED
 
 void print_header(void);
-void print_board(const chessboard board);
+void print_board(const chessboard board, bool wtp);
 const char *bitboard_to_FEN(chessboard board);
 chessboard FEN_to_board(const char *fen);
+void print_bitboard(bitboard b, bool wtp);
 
 #endif

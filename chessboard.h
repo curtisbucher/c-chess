@@ -5,12 +5,14 @@
 // The struct to hold the bitboard
 #ifndef chessboard_h
 #define chessboard_h
+
+typedef unsigned long bitboard;
 typedef struct
 {
-    unsigned long wp, bp, wr, br, wn, bn, wb, bb, wq, bq, wk, bk; //The bitboards for each peice
-    unsigned long en_passant;                                     //The en passant square
-    bool wtm;                                                     //The turn
-    char castling, halfmove, fullmove;                            //The castling rights, and the fullmove and halfmove numbers
+    bitboard wp, bp, wr, br, wn, bn, wb, bb, wq, bq, wk, bk; //The bitboards for each peice
+    bitboard en_passant;                                     //The en passant square
+    bool wtm;                                                //The turn
+    char castling, halfmove, fullmove;                       //The castling rights, and the fullmove and halfmove numbers
 
 } chessboard;
 
@@ -109,7 +111,7 @@ typedef struct
 #define BLACK_KINGSIDE (0b0010)
 #define BLACK_QUEENSIDE (0b0001)
 
-chessboard STARTING_BOARD = {
+static chessboard STARTING_BOARD = {
     .wp = RANK_2,                     // 0000 0000 .... 1111 1111 0000 1000
     .bp = RANK_7,                     // 0000 0000 1111 1111 .... 0000 0000
     .wr = A1 | H1,                    // 0000 0000 .... 1000 0001
@@ -128,4 +130,5 @@ chessboard STARTING_BOARD = {
     .halfmove = 0,                    // the halfmove clock,
     .fullmove = 0,                    // the fullmove number
 };
+
 #endif

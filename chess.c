@@ -5,8 +5,8 @@
 
 #include "chessboard.h"
 #include "board_io.h"
-#include "startingboard.h"
 #include "score.h"
+#include "gen_moves.h"
 
 #include "tools.h"
 
@@ -17,8 +17,15 @@ void test_time(void)
 
 int main()
 {
-    printf("%f\n", timeit(test_time, 1000000));
-    //printf("%i\n", score_board(STARTING_BOARD));
-    //printf("%d\n", score_board_2(STARTING_BOARD));
+    chessboard board = STARTING_BOARD;
+    board.bp |= C7;
+    board.wp |= D6;
+    board.wp |= B6;
+
+    board.wk |= gm_b_pawn(C7, board);
+
+    print_board(board, false);
+    printf("\n%s", bitboard_to_FEN(board));
+
     return 0;
 }

@@ -10,47 +10,78 @@ void print_header()
 ██████  ██   ██  ██████     ██    ██   ██ ███████ ██   ██ ███████     ██████  ██   ██ ██   ████ ███████\n \
 \tBy Curtis Bucher                                                            MIT License 2021\n\n");
 }
-void print_board(const chessboard board)
+
+void print_bitboard(bitboard b, bool wtp)
 {
-    unsigned long map = 1L << 56;
+    // Prints the binary representation of a bitboard.
+
+    unsigned long map = wtp ? 1L << 56 : 1L;
     int color = 1;
     char peice = ' ';
 
-    //printf("┌───┬───┬───┬───┬───┬───┬───┬───┐\n");
+    for (int i = 0; i < 64; i++)
+    {
+        printf(b & map ? "1 " : "0 ");
+
+        if ((i + 1) % 8 == 0)
+        {
+            printf("%s%s%d%s%s\n", LIGHT_BACKGROUND, DARK_TEXT, wtp ? 8 - i / 8 : i / 8, NORMAL_BACKGROUND, LIGHT_TEXT);
+            if (wtp)
+                map >>= 15;
+            else
+                map <<= 1;
+            color = !color;
+        }
+        else
+        {
+
+            map <<= 1;
+        }
+    }
+    printf("%s%sA B C D E F G H%s%s\n", LIGHT_BACKGROUND, DARK_TEXT, NORMAL_BACKGROUND, LIGHT_TEXT);
+}
+
+void print_board(const chessboard board, bool wtp)
+{
+    unsigned long map = wtp ? 1L << 56 : 1L << 7;
+    int color = 1;
+    char peice = ' ';
+
     for (int i = 0; i < 64; i++)
     {
         color = !color;
         if (board.wr & map)
-            peice = 'R';
-        else if (board.wn & map)
-            peice = 'N';
-        else if (board.wb & map)
-            peice = 'B';
-        else if (board.wq & map)
-            peice = 'Q';
-        else if (board.wk & map)
-            peice = 'K';
-        else if (board.wp & map)
-            peice = 'P';
-        else if (board.br & map)
             peice = 'r';
-        else if (board.bn & map)
+        else if (board.wn & map)
             peice = 'n';
-        else if (board.bb & map)
+        else if (board.wb & map)
             peice = 'b';
-        else if (board.bq & map)
+        else if (board.wq & map)
             peice = 'q';
-        else if (board.bk & map)
+        else if (board.wk & map)
             peice = 'k';
-        else if (board.bp & map)
+        else if (board.wp & map)
             peice = 'p';
+        else if (board.br & map)
+            peice = 'R';
+        else if (board.bn & map)
+            peice = 'N';
+        else if (board.bb & map)
+            peice = 'B';
+        else if (board.bq & map)
+            peice = 'Q';
+        else if (board.bk & map)
+            peice = 'K';
+        else if (board.bp & map)
+            peice = 'P';
         else
             peice = ' ';
 
         printf("%s%s %c %s", peice < 'a' ? DARK_TEXT : LIGHT_TEXT, color ? DARK_BACKGROUND : LIGHT_BACKGROUND, peice, NORMAL_BACKGROUND);
 
-        if ((i + 1) % 8 == 0 && i != 63)
+        if ((i + 1) % 8 == 0)
         {
+            printf(" %d", wtp ? 8 - i / 8 : 1 + i / 8);
             switch (i / 8)
             {
             case 0:
@@ -72,17 +103,26 @@ void print_board(const chessboard board)
                 printf("\t\tFullmove number:\t%d", board.fullmove);
                 break;
             }
+            printf("\n");
 
-            printf("\n"); //printf("│\n├───┼───┼───┼───┼───┼───┼───┼───┤\n");
-            map >>= 15;
+            if (wtp)
+                map >>= 15;
+            else
+                map <<= 15;
             color = !color;
         }
         else
         {
-            map <<= 1;
+            if (wtp)
+                map <<= 1;
+            else
+                map >>= 1;
         }
     }
-    //printf("%s│\n└───┴───┴───┴───┴───┴───┴───┴───┘\n", NORMAL_BACKGROUND);
+    if (wtp)
+        printf(" A  B  C  D  E  F  G  H  ");
+    else
+        printf(" H  G  F  E  D  C  B  A  ");
 }
 
 const char *bitboard_to_FEN(chessboard board)
