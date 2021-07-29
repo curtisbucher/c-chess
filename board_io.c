@@ -1,6 +1,15 @@
 #include "chessboard.h"
 #include "board_io.h"
 
+void print_header()
+{
+    printf("\n ██████  ██████   ██████  ████████ ██   ██ ███████ ██████  ███████     ██████   █████  ███    ██ ███████\n \
+██   ██ ██   ██ ██    ██    ██    ██   ██ ██      ██   ██ ██          ██   ██ ██   ██ ████   ██ ██\n \
+██████  ██████  ██    ██    ██    ███████ █████   ██████  ███████     ██████  ███████ ██ ██  ██ █████\n \
+██   ██ ██   ██ ██    ██    ██    ██   ██ ██      ██   ██      ██     ██   ██ ██   ██ ██  ██ ██ ██\n \
+██████  ██   ██  ██████     ██    ██   ██ ███████ ██   ██ ███████     ██████  ██   ██ ██   ████ ███████\n \
+\tBy Curtis Bucher                                                            MIT License 2021\n\n");
+}
 void print_board(const chessboard board)
 {
     unsigned long map = 1L << 56;
@@ -38,7 +47,7 @@ void print_board(const chessboard board)
         else
             peice = ' ';
 
-        printf("%s%s %c %s", !color ? DARK_TEXT : LIGHT_TEXT, color ? DARK_BACKGROUND : LIGHT_BACKGROUND, peice, NORMAL_BACKGROUND);
+        printf("%s%s %c %s", peice < 'a' ? DARK_TEXT : LIGHT_TEXT, color ? DARK_BACKGROUND : LIGHT_BACKGROUND, peice, NORMAL_BACKGROUND);
 
         if ((i + 1) % 8 == 0 && i != 63)
         {
