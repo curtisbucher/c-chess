@@ -39,18 +39,23 @@ bitboard gm_rook(bitboard sq, chessboard board)
     byte rank = index % 8;      //getting rank index of rook
     byte file = index / 8;      //getting file of rook
 
-    byte blocker_rank = (all_peices & ~sq) >> (rank * 8);
-    byte b_rank = (b_peices & ~sq) >> (rank * 8);
+    // Horizontal moves
+    byte occupied = all_peices >> (rank * 8);
+    byte slider = sq >> (rank * 8);
 
-    byte left_map = 0xFF >> (file + 1);
-    byte l_blockers = left_map & blocker_rank;
-    byte r_blockers = ~left_map & blocker_rank;
-    byte l_blocker = highest_bit(l_blockers);
-    byte r_blocker = lowest_bit(r_blockers);
-    byte moves = ~((l_blocker << 1) - 1) & left_map | (r_blocker - 1) & ~left_map;
+    byte rev_occupied = rev_byte(occupied);
+    byte rev_slider = rev_byte(slider);
 
-    print_bitboard((moves | b_rank) << rank * 8, true);
+    byte r_moves = occupied ^ (occupied - (slider << 1)); // can be mostly parralleized
+    byte l_moves = rev_byte(rev_occupied ^ (rev_occupied - (rev_slider << 1)));
+    byte moves = (r_moves | l_moves) & ~(w_peices >> (rank * 8)); // can be parralleized
+
+    //Vertical moves
+
+    print_bitboard(moves, true);
 
     //printf("%d %d\n", right_blockers, rank * 8);
     return 0;
 }
+
+// byte calc(bitboard bb, byte index`)

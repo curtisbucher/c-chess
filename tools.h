@@ -2,7 +2,7 @@
 #include <time.h>
 
 typedef unsigned char byte;
-
+int rev_byte(byte n);
 int pop_cnt(bitboard n);
 int lowest_bit(bitboard n);
 int highest_bit(bitboard n);

@@ -19,7 +19,7 @@ int main()
 {
     chessboard board = EMPTY_BOARD;
     board.wr = D4;
-    board.bp = B4;
+    board.bp = A4;
     board.wp = G4;
     board.bk = D5;
 
