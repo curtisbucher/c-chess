@@ -1,5 +1,6 @@
 // Generates possible moves for the current position.
 #include "gen_moves.h"
+#include "board_io.h"
 
 bitboard gm_w_pawn(bitboard sq, chessboard board)
 {
@@ -25,4 +26,31 @@ bitboard gm_b_pawn(bitboard sq, chessboard board)
                      (sq >> 7 & w_peices) |                                  //TR if black peice
                      (sq >> 16 & ~all_peices & ~(all_peices >> 8)) & RANK_5; //TT if Rank 2
     return moves;
+}
+
+bitboard gm_rook(bitboard sq, chessboard board)
+{
+    bitboard w_peices = board.wp | board.wr | board.wn | board.wb | board.wq | board.wk;
+    bitboard b_peices = board.bp | board.br | board.bn | board.bb | board.bq | board.bk;
+    bitboard all_peices = w_peices | b_peices;
+
+    // Calculating horizontal moves
+    byte index = get_index(sq); // Index of the current square
+    byte rank = index % 8;      //getting rank index of rook
+    byte file = index / 8;      //getting file of rook
+
+    byte b_rank = (b_peices & ~sq) >> (rank * 8); //rank of b_peices
+    byte w_rank = (w_peices & ~sq) >> (rank * 8); //rank of w_peices not including current square
+
+    byte left_map = 0xFF >> (file + 1);
+    byte l_blockers = left_map & (w_rank | (b_rank >> 1));
+    byte r_blockers = ~left_map & (w_rank | (b_rank << 1));
+    byte l_blocker = highest_bit(l_blockers);
+    byte r_blocker = lowest_bit(r_blockers);
+    byte moves = ~((l_blocker << 1) - 1) & left_map | (r_blocker - 1) & ~left_map;
+
+    print_bitboard(moves << rank * 8, true);
+
+    //printf("%d %d\n", right_blockers, rank * 8);
+    return 0;
 }

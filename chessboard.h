@@ -131,4 +131,6 @@ static chessboard STARTING_BOARD = {
     .fullmove = 0,                    // the fullmove number
 };
 
+static chessboard EMPTY_BOARD = {0};
+
 #endif
