@@ -17,8 +17,8 @@ typedef struct
 
 } chessboard;
 
-#define WHITE (0)
-#define BLACK (0xFFFFFFFFFFFFFFFF)
+#define WHITE (0xFFFFFFFFFFFFFFFF)
+#define BLACK (0)
 
 #define UL_TRIANGLE (0x7F3F1F0703010000)
 #define UR_TRIANGLE (0xFEFCF8F0E0C08000)

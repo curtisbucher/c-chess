@@ -10,27 +10,54 @@
 
 #include "tools.h"
 
+bitboard moves[40];
+
 void test_time(void)
 {
-    get_index(16777216L);
+    gen_moves(STARTING_BOARD, moves, 0);
 }
 
 int main()
 {
-    chessboard board = EMPTY_BOARD;
-    board.wq = D4;
+    // Initializing random generator
+    time_t t;
+    srand((unsigned)time(&t));
+
+    chessboard board = STARTING_BOARD;
     bitboard moves[40];
+    board.wtm = WHITE;
 
-    int num_moves = gen_moves(board, moves);
+    int num_moves = gen_moves(board, moves, board.wtm);
 
-    for (int i = 0; i < num_moves; i++)
-    {
-        print_bitboard(moves[i], true);
-    }
+    bitboard move = moves[rand() % num_moves];
 
-    print_board(board, true);
+    print_board(board, board.wtm);
 
-    //printf("%f\n", timeit(test_time, 10000));
+    // Applying move
+    if (move & board.wp)
+        board.wp ^= move;
+    else if (move & board.wr)
+        board.wr ^= move;
+    else if (move & board.wb)
+        board.wb ^= move;
+    else if (move & board.wn)
+        board.wn ^= move;
+    else if (move & board.wq)
+        board.wq ^= move;
+    else if (move & board.wk)
+        board.wk ^= move;
+
+    // Removing taken peices
+    board.bp &= ~move;
+    board.br &= ~move;
+    board.bn &= ~move;
+    board.bb &= ~move;
+    board.bq &= ~move;
+    board.bk &= ~move;
+
+    print_board(board, board.wtm);
+
+    // printf("%f\n", timeit(test_time, 10000));
 
     return 0;
 }

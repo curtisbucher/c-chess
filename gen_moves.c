@@ -3,7 +3,7 @@
 #include "board_io.h"
 
 // Generate all possible moves for the current position. A move is represented as two bits active on a bitboard.
-int gen_moves(chessboard board, bitboard *moves)
+int gen_moves(chessboard board, bitboard *moves, int white)
 {
     bitboard w_pieces = board.wp | board.wr | board.wn | board.wb | board.wq | board.wk;
     bitboard b_pieces = board.bp | board.br | board.bn | board.bb | board.bq | board.bk;
@@ -11,84 +11,79 @@ int gen_moves(chessboard board, bitboard *moves)
 
     int i = 0;
 
-    // White Pawns
-    mask wp[8];
-    int num_pieces = bitboard_to_mask(board.wp, wp, 8);
+    mask pieces[8];
+    mask p_moves[28];
 
-    mask wp_moves[3];
+    // Pawns
+    int num_pieces = bitboard_to_mask(white ? board.wp : board.bp, pieces, 8);
     int num_moves;
+
     // for each white pawn
     for (int p = 0; p < num_pieces; p++)
     {
-        num_moves = bitboard_to_mask(gm_w_pawn(wp[p], occupied, b_pieces), wp_moves, 3);
+        num_moves = bitboard_to_mask(
+            white ? gm_w_pawn(pieces[p], occupied, b_pieces) : gm_b_pawn(pieces[p], occupied, w_pieces),
+            p_moves, 28);
         // for each possible move
         for (int m = 0; m < num_moves; m++)
         {
-            moves[i++] = wp[p] | wp_moves[m];
+            moves[i++] = pieces[p] | p_moves[m];
         }
     }
 
     // Rooks
-    mask wr[2];
-    num_pieces = bitboard_to_mask(board.wr, wr, 2);
+    num_pieces = bitboard_to_mask(white ? board.wr : board.br, pieces, 2);
 
-    mask r_moves[14];
     // for each rook
     for (int p = 0; p < num_pieces; p++)
     {
-        num_moves = bitboard_to_mask(gm_rook(wr[p], occupied, w_pieces), r_moves, 14);
+        num_moves = bitboard_to_mask(gm_rook(pieces[p], occupied, white ? w_pieces : b_pieces), p_moves, 14);
         // for each possible move
         for (int m = 0; m < num_moves; m++)
         {
-            moves[i++] = wr[p] | r_moves[m];
+            moves[i++] = pieces[p] | p_moves[m];
         }
     }
 
     // Bishops
-    mask bish[2];
-    num_pieces = bitboard_to_mask(board.wb, bish, 2);
+    num_pieces = bitboard_to_mask(white ? board.wb : board.bb, pieces, 2);
 
-    mask bish_moves[14];
     // for each bishop
     for (int p = 0; p < num_pieces; p++)
     {
-        num_moves = bitboard_to_mask(gm_bishop(bish[p], occupied, w_pieces), bish_moves, 14);
+        num_moves = bitboard_to_mask(gm_bishop(pieces[p], occupied, white ? w_pieces : b_pieces), p_moves, 14);
         // for each possible move
         for (int m = 0; m < num_moves; m++)
         {
-            moves[i++] = bish[p] | bish_moves[m];
+            moves[i++] = pieces[p] | p_moves[m];
         }
     }
 
     // Queens
-    mask qn[2];
-    num_pieces = bitboard_to_mask(board.wq, qn, 2);
+    num_pieces = bitboard_to_mask(white ? board.wq : board.bq, pieces, 2);
 
-    mask qn_moves[28];
     // for each queen
     for (int p = 0; p < num_pieces; p++)
     {
-        num_moves = bitboard_to_mask(gm_queen(qn[p], occupied, w_pieces), qn_moves, 28);
+        num_moves = bitboard_to_mask(gm_queen(pieces[p], occupied, white ? w_pieces : b_pieces), p_moves, 28);
         // for each possible move
         for (int m = 0; m < num_moves; m++)
         {
-            moves[i++] = qn[p] | qn_moves[m];
+            moves[i++] = pieces[p] | p_moves[m];
         }
     }
 
     // Knight
-    mask kn[2];
-    num_pieces = bitboard_to_mask(board.wn, kn, 2);
+    num_pieces = bitboard_to_mask(white ? board.wn : board.bn, pieces, 2);
 
-    mask kn_moves[4];
     // for each king
     for (int p = 0; p < num_pieces; p++)
     {
-        num_moves = bitboard_to_mask(gm_knight(kn[p], w_pieces), kn_moves, 4);
+        num_moves = bitboard_to_mask(gm_knight(pieces[p], white ? w_pieces : b_pieces), p_moves, 4);
         // for each possible move
         for (int m = 0; m < num_moves; m++)
         {
-            moves[i++] = kn[p] | kn_moves[m];
+            moves[i++] = pieces[p] | p_moves[m];
         }
     }
 
