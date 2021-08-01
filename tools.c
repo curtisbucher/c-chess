@@ -16,16 +16,31 @@ int pop_cnt(bitboard n)
            num_ones[n >> 56 & 0xFF];
 }
 
-int lowest_bit(bitboard n)
+mask lowest_bit(bitboard n)
 {
     // Returns the lowest bit in the given integer.
     return n & -n;
 }
 
-int highest_bit(bitboard n)
+mask highest_bit(bitboard n)
 {
     // Returns the highest bit in the given integer.
     return (pop_cnt(n) - 1) ? n & (n - 1) : n;
+}
+
+// Converts the given bitboard to a list of maps (one active bit)
+// MAY HAVE PROBLEMS WITH REALLOCATION
+int bitboard_to_mask(bitboard bb, mask *m, int l)
+{
+    //Getting the number of bits in the bitboard
+    int i = 0;
+    while (bb)
+    {
+        m[i] = lowest_bit(bb);
+        bb ^= m[i];
+        i++;
+    }
+    return i;
 }
 
 int get_index(bitboard n)
@@ -76,7 +91,8 @@ rot_board(bitboard b)
     return (vert_mirror_board(hor_mirror_board(b)));
 }
 
-bitboard gen_shift(bitboard n, int s)
+bitboard
+gen_shift(bitboard n, int s)
 {
     // Generates a bitboard with the given bit shifted by s (pos or neg shift).
     return (s > 0) ? (n << s) : (n >> -s);

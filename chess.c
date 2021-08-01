@@ -17,10 +17,16 @@ void test_time(void)
 
 int main()
 {
-    chessboard board = STARTING_BOARD;
+    chessboard board = EMPTY_BOARD;
+    board.wq = D4;
     bitboard moves[40];
 
-    gen_moves(board, moves);
+    int num_moves = gen_moves(board, moves);
+
+    for (int i = 0; i < num_moves; i++)
+    {
+        print_bitboard(moves[i], true);
+    }
 
     print_board(board, true);
 

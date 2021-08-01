@@ -1,7 +1,7 @@
 #include "chessboard.h"
 #include "tools.h"
 
-bitboard gen_moves(bitboard sq, chessboard board);
+int gen_moves(chessboard board, bitboard *moves);
 
 //Sliders
 bitboard gm_queen(bitboard sq, bitboard occupied, bitboard w_pieces);

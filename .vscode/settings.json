@@ -4,5 +4,8 @@
         "gen_moves.h": "c",
         "cstddef": "c",
         "board_io.h": "c"
-    }
+    },
+    "cSpell.words": [
+        "bish"
+    ]
 }

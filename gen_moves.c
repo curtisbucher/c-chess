@@ -3,19 +3,96 @@
 #include "board_io.h"
 
 // Generate all possible moves for the current position. A move is represented as two bits active on a bitboard.
-bitboard
-gen_moves(chessboard board, bitboard *moves)
+int gen_moves(chessboard board, bitboard *moves)
 {
     bitboard w_pieces = board.wp | board.wr | board.wn | board.wb | board.wq | board.wk;
     bitboard b_pieces = board.bp | board.br | board.bn | board.bb | board.bq | board.bk;
     bitboard occupied = w_pieces | b_pieces;
 
-    // Pawns
-    bitboard wp = bitboard_to_map(board.wp);
+    int i = 0;
 
-    bitboard moves = gm_knight(sq, w_pieces);
-    print_bitboard(moves, true);
-    return 0;
+    // White Pawns
+    mask wp[8];
+    int num_pieces = bitboard_to_mask(board.wp, wp, 8);
+
+    mask wp_moves[3];
+    int num_moves;
+    // for each white pawn
+    for (int p = 0; p < num_pieces; p++)
+    {
+        num_moves = bitboard_to_mask(gm_w_pawn(wp[p], occupied, b_pieces), wp_moves, 3);
+        // for each possible move
+        for (int m = 0; m < num_moves; m++)
+        {
+            moves[i++] = wp[p] | wp_moves[m];
+        }
+    }
+
+    // Rooks
+    mask wr[2];
+    num_pieces = bitboard_to_mask(board.wr, wr, 2);
+
+    mask r_moves[14];
+    // for each rook
+    for (int p = 0; p < num_pieces; p++)
+    {
+        num_moves = bitboard_to_mask(gm_rook(wr[p], occupied, w_pieces), r_moves, 14);
+        // for each possible move
+        for (int m = 0; m < num_moves; m++)
+        {
+            moves[i++] = wr[p] | r_moves[m];
+        }
+    }
+
+    // Bishops
+    mask bish[2];
+    num_pieces = bitboard_to_mask(board.wb, bish, 2);
+
+    mask bish_moves[14];
+    // for each bishop
+    for (int p = 0; p < num_pieces; p++)
+    {
+        num_moves = bitboard_to_mask(gm_bishop(bish[p], occupied, w_pieces), bish_moves, 14);
+        // for each possible move
+        for (int m = 0; m < num_moves; m++)
+        {
+            moves[i++] = bish[p] | bish_moves[m];
+        }
+    }
+
+    // Queens
+    mask qn[2];
+    num_pieces = bitboard_to_mask(board.wq, qn, 2);
+
+    mask qn_moves[28];
+    // for each queen
+    for (int p = 0; p < num_pieces; p++)
+    {
+        num_moves = bitboard_to_mask(gm_queen(qn[p], occupied, w_pieces), qn_moves, 28);
+        // for each possible move
+        for (int m = 0; m < num_moves; m++)
+        {
+            moves[i++] = qn[p] | qn_moves[m];
+        }
+    }
+
+    // Knight
+    mask kn[2];
+    num_pieces = bitboard_to_mask(board.wn, kn, 2);
+
+    mask kn_moves[4];
+    // for each king
+    for (int p = 0; p < num_pieces; p++)
+    {
+        num_moves = bitboard_to_mask(gm_knight(kn[p], w_pieces), kn_moves, 4);
+        // for each possible move
+        for (int m = 0; m < num_moves; m++)
+        {
+            moves[i++] = kn[p] | kn_moves[m];
+        }
+    }
+
+    return i;
 }
 
 bitboard
@@ -50,8 +127,6 @@ gm_rook(bitboard sq, bitboard occupied, bitboard w_pieces)
 
     bitboard hor_filemask = gen_shift(RANK_1, (rank * 8));
     bitboard vert_filemask = gen_shift(FILE_A, file);
-
-    print_bitboard(hor_filemask, true);
 
     // Positive horizontal
     bitboard hor_pos_moves = gm_pos_slider(sq, occupied, w_pieces, hor_filemask);
@@ -129,7 +204,15 @@ gm_queen(bitboard sq, bitboard occupied, bitboard w_pieces)
 bitboard
 gm_knight(bitboard sq, bitboard w_pieces)
 {
-    bitboard moves = sq << 17 | sq << 15 | sq << 10 | sq << 6 | sq >> 6 | sq >> 10 | sq >> 15 | sq >> 17;
+    int index = get_index(sq);
+    int rank = index / 8;
+    unsigned long rank_mask = (RANK_1 << (rank * 8));
+
+    bitboard moves = (sq << 17 | sq << 15) & (rank_mask << 16) | //Up two
+                     (sq >> 17 | sq >> 15) & (rank_mask >> 16) | //Down two
+                     (sq << 10 | sq << 6) & (rank_mask << 8) |   //Up one
+                     (sq >> 10 | sq >> 6) & (rank_mask >> 8);    //Down one
+
     moves &= ~w_pieces;
     return moves;
 }
