@@ -41,6 +41,41 @@ int rev_byte(byte n)
     return rev_bytes[n];
 }
 
+bitboard
+hor_mirror_board(bitboard b)
+{
+    bitboard out = (b & FILE_A) << 7 |
+                   (b & FILE_B) << 5 |
+                   (b & FILE_C) << 3 |
+                   (b & FILE_D) << 1 |
+                   (b & FILE_E) >> 1 |
+                   (b & FILE_F) >> 3 |
+                   (b & FILE_G) >> 5 |
+                   (b & FILE_H) >> 7;
+    return out;
+}
+
+bitboard
+vert_mirror_board(bitboard b)
+{
+    bitboard out = (b & RANK_1) << 8 * 7 |
+                   (b & RANK_2) << 8 * 5 |
+                   (b & RANK_3) << 8 * 3 |
+                   (b & RANK_4) << 8 * 1 |
+                   (b & RANK_5) >> 8 * 1 |
+                   (b & RANK_6) >> 8 * 3 |
+                   (b & RANK_7) >> 8 * 5 |
+                   (b & RANK_8) >> 8 * 7;
+    return out;
+}
+
+// Rotates a bitboard 180 degrees (used for bishops) SLOW
+bitboard
+rot_board(bitboard b)
+{
+    return (vert_mirror_board(hor_mirror_board(b)));
+}
+
 bitboard gen_shift(bitboard n, int s)
 {
     // Generates a bitboard with the given bit shifted by s (pos or neg shift).

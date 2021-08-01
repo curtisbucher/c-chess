@@ -17,22 +17,12 @@ void test_time(void)
 
 int main()
 {
-    chessboard board = EMPTY_BOARD;
-    board.wr = D4;
-    board.bp = A4;
-    board.wp = G4;
-    board.bk = D5;
+    chessboard board = STARTING_BOARD;
+    bitboard moves[40];
 
-    board.wk = gm_rook(D4, board);
-    // board.bp |= C7;
-    // board.wp |= D6;
-    // board.wp |= B6;
-
-    // board.wk |= gm_b_pawn(C7, board);
+    gen_moves(board, moves);
 
     print_board(board, true);
-    // printf("\n%s", bitboard_to_FEN(board));
-    //gm_rook(C7, board);
 
     //printf("%f\n", timeit(test_time, 10000));
 

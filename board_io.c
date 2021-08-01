@@ -120,9 +120,9 @@ void print_board(const chessboard board, bool wtp)
         }
     }
     if (wtp)
-        printf(" A  B  C  D  E  F  G  H  ");
+        printf(" A  B  C  D  E  F  G  H  \n\n");
     else
-        printf(" H  G  F  E  D  C  B  A  ");
+        printf(" H  G  F  E  D  C  B  A  \n\n");
 }
 
 const char *bitboard_to_FEN(chessboard board)
