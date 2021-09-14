@@ -14,50 +14,49 @@ bitboard moves[40];
 
 void test_time(void)
 {
-    gen_moves(STARTING_BOARD, moves, 0);
+    int num_moves = gen_moves(STARTING_BOARD, moves, 0);
 }
 
 int main()
 {
-    // Initializing random generator
+    //Initializing random generator
     time_t t;
     srand((unsigned)time(&t));
 
     chessboard board = STARTING_BOARD;
-    bitboard moves[40];
-    board.wtm = WHITE;
+    bitboard moves[116]; //naive max number of moves is 116
+    move m = 0;
+    move m_player = 0;
+    int num_moves;
+    bool exit = false;
 
-    int num_moves = gen_moves(board, moves, board.wtm);
+    while (!exit)
+    {
+        //WHITE's turn
+        printf("\e[1;1H\e[2J");
+        print_board(board, board.wtm);
+        while (!m_player)
+            m_player = get_move_input(board, board.wtm);
 
-    bitboard move = moves[rand() % num_moves];
+        if (m_player == 0xFFFFFFFFFFFFFFFF)
+            return 0;
 
-    print_board(board, board.wtm);
+        board = apply_move(board, m_player, board.wtm);
+        board.wtm = !board.wtm;
+        board.halfmove++;
+        board.fullmove++;
+        m_player = 0;
 
-    // Applying move
-    if (move & board.wp)
-        board.wp ^= move;
-    else if (move & board.wr)
-        board.wr ^= move;
-    else if (move & board.wb)
-        board.wb ^= move;
-    else if (move & board.wn)
-        board.wn ^= move;
-    else if (move & board.wq)
-        board.wq ^= move;
-    else if (move & board.wk)
-        board.wk ^= move;
+        //BLACK's turn
+        num_moves = gen_moves(board, moves, board.wtm);
+        m = moves[rand() % num_moves];
 
-    // Removing taken peices
-    board.bp &= ~move;
-    board.br &= ~move;
-    board.bn &= ~move;
-    board.bb &= ~move;
-    board.bq &= ~move;
-    board.bk &= ~move;
+        board = apply_move(board, m, board.wtm);
 
-    print_board(board, board.wtm);
-
-    // printf("%f\n", timeit(test_time, 10000));
+        board.wtm = !board.wtm;
+        board.halfmove++;
+        board.fullmove++;
+    }
 
     return 0;
 }

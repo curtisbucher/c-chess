@@ -3,7 +3,8 @@
         "startingboard.h": "c",
         "gen_moves.h": "c",
         "cstddef": "c",
-        "board_io.h": "c"
+        "board_io.h": "c",
+        "typeinfo": "c"
     },
     "cSpell.words": [
         "bish"

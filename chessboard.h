@@ -1,13 +1,16 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+// #include "tools.h"
 
-// The struct to hold the bitboard
 #ifndef chessboard_h
 #define chessboard_h
 
+// The struct to hold the bitboard
 typedef unsigned long bitboard;
 typedef unsigned long mask; // A bitboard with only one active bit.
+typedef unsigned long move; // A bitboard with only two active bits.
+
 typedef struct
 {
     bitboard wp, bp, wr, br, wn, bn, wb, bb, wq, bq, wk, bk; //The bitboards for each peice
@@ -16,6 +19,8 @@ typedef struct
     char castling, halfmove, fullmove;                       //The castling rights, and the fullmove and halfmove numbers
 
 } chessboard;
+
+chessboard apply_move(chessboard board, move m, int color);
 
 #define WHITE (0xFFFFFFFFFFFFFFFF)
 #define BLACK (0)

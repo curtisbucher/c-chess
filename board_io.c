@@ -370,3 +370,48 @@ chessboard FEN_to_board(const char *fen)
 
     return board;
 }
+
+// Gets a move from user input
+move get_move_input(chessboard board, bool wtm)
+{
+    char input[10];
+    printf("Move: ");
+
+    fgets(input, 10, stdin);
+    if (input[0] == 'q')
+        return 0xFFFFFFFFFFFFFFFF;
+
+    mask file = 0;
+    mask rank = 0;
+    move m = 0;
+
+    char c = input[0];
+    int i = 0;
+    while (c != '\n')
+    {
+        c = input[i++];
+
+        if (c <= 'h' && c >= 'a')
+            c -= 32; //Converting to uppper case
+
+        if (c <= 'H' && c >= 'A')
+            file = FILE_A << (c - 'A');
+
+        else if (c <= '8' && c >= '1')
+        {
+            rank = RANK_1 << ((c - '1') * 8);
+        }
+
+        if (rank && file && m == 0)
+        {
+            m = rank & file;
+            rank = 0;
+            file = 0;
+        }
+        else if (rank && file)
+        {
+            return (rank & file) | m;
+        }
+    }
+    return 0;
+}

@@ -15,5 +15,6 @@ void print_board(const chessboard board, bool wtp);
 const char *bitboard_to_FEN(chessboard board);
 chessboard FEN_to_board(const char *fen);
 void print_bitboard(bitboard b, bool wtp);
+move get_move_input(chessboard board, bool wtm);
 
 #endif

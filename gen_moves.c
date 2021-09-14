@@ -2,8 +2,15 @@
 #include "gen_moves.h"
 #include "board_io.h"
 
-// Generate all possible moves for the current position. A move is represented as two bits active on a bitboard.
-int gen_moves(chessboard board, bitboard *moves, int white)
+/*  Generate all possible moves for the current position.
+
+    board: A chessboard type representing the current board.
+    moves: An array of `move` types. Modified in place.
+    white: An integer, equal to WHITE or BLACK representing the piece to move.
+
+    returns: The size of the array as an int.
+*/
+int gen_moves(chessboard board, move *moves, int white)
 {
     bitboard w_pieces = board.wp | board.wr | board.wn | board.wb | board.wq | board.wk;
     bitboard b_pieces = board.bp | board.br | board.bn | board.bb | board.bq | board.bk;
@@ -227,8 +234,8 @@ gm_king(bitboard sq, bitboard w_pieces)
 bitboard
 gm_pos_slider(bitboard sq, bitboard occupied, bitboard w_pieces, bitboard filemask)
 {
-    bitboard pot_blockers = (occupied & filemask);
-    bitboard diff = pot_blockers - (2 * sq);
+    bitboard pot_blockers = occupied & filemask;
+    bitboard diff = pot_blockers - 2 * sq;
     bitboard changed = diff ^ occupied;
     bitboard b_moves = changed & filemask & ~w_pieces;
 

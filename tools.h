@@ -1,6 +1,9 @@
 #include "chessboard.h"
 #include <time.h>
 
+#ifndef tools_h
+#define tools_h
+
 typedef unsigned char byte;
 int rev_byte(byte n);
 int pop_cnt(bitboard n);
@@ -13,3 +16,5 @@ bitboard hor_mirror_board(bitboard b);
 bitboard vert_mirror_board(bitboard b);
 bitboard rot_board(bitboard b);
 double timeit(void (*f)(), int n);
+
+#endif
