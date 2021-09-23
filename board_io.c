@@ -1,5 +1,6 @@
 #include "chessboard.h"
 #include "board_io.h"
+#include <string.h>
 
 void print_header()
 {
@@ -9,6 +10,10 @@ void print_header()
 ██   ██ ██   ██ ██    ██    ██    ██   ██ ██      ██   ██      ██     ██   ██ ██   ██ ██  ██ ██ ██\n \
 ██████  ██   ██  ██████     ██    ██   ██ ███████ ██   ██ ███████     ██████  ██   ██ ██   ████ ███████\n \
 \tBy Curtis Bucher                                                            MIT License 2021\n\n");
+}
+
+void clear_screen(){
+    printf("\e[1;1H\e[2J");
 }
 
 void print_bitboard(bitboard b, bool wtp)
@@ -378,7 +383,7 @@ move get_move_input(chessboard board, bool wtm)
     printf("Move: ");
 
     fgets(input, 10, stdin);
-    if (input[0] == 'q')
+    if (strcmp(input, "exit\n") == 0)
         return 0xFFFFFFFFFFFFFFFF;
 
     mask file = 0;

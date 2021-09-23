@@ -7,17 +7,24 @@
 #include "board_io.h"
 #include "score.h"
 #include "gen_moves.h"
+#include "evaluate.h"
+#include "engine.h"
 
 #include "tools.h"
 
 bitboard moves[40];
 
-void test_time(void)
+void
+test_time(void)
 {
     int num_moves = gen_moves(STARTING_BOARD, moves, 0);
 }
 
-int main()
+/**
+ * @brief The main chess function. Handles IO.
+**/
+int
+main()
 {
     //Initializing random generator
     time_t t;
@@ -33,13 +40,22 @@ int main()
     while (!exit)
     {
         //WHITE's turn
-        printf("\e[1;1H\e[2J");
+        clear_screen();
         print_board(board, board.wtm);
-        while (!m_player)
+        while (!m_player){
             m_player = get_move_input(board, board.wtm);
 
-        if (m_player == 0xFFFFFFFFFFFFFFFF)
-            return 0;
+            // If player quits
+            if (m_player == 0xFFFFFFFFFFFFFFFF){
+                printf("Goodbye.");
+                return 0;
+            }
+            // Checking if move is legal
+            else if(!is_legal(m_player, board, board.wtm)){
+                printf("Error: Bad move.\n");
+                m_player = 0;
+            }
+        }
 
         board = apply_move(board, m_player, board.wtm);
         board.wtm = !board.wtm;
@@ -48,8 +64,7 @@ int main()
         m_player = 0;
 
         //BLACK's turn
-        num_moves = gen_moves(board, moves, board.wtm);
-        m = moves[rand() % num_moves];
+        m = calc_best_move(board, board.wtm);
 
         board = apply_move(board, m, board.wtm);
 

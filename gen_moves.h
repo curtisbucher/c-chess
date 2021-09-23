@@ -1,7 +1,8 @@
 #include "chessboard.h"
 #include "tools.h"
 
-int gen_moves(chessboard board, bitboard *moves, int white);
+int gen_moves(chessboard board, bitboard *moves, move wtm);
+bool is_legal(move m, chessboard board, bool wtm);
 
 //Sliders
 bitboard gm_queen(bitboard sq, bitboard occupied, bitboard w_pieces);

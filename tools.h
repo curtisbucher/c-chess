@@ -4,6 +4,9 @@
 #ifndef tools_h
 #define tools_h
 
+#define DEBUG 1
+#define IF_DEBUG(x) if (DEBUG) { x; }
+
 typedef unsigned char byte;
 int rev_byte(byte n);
 int pop_cnt(bitboard n);
