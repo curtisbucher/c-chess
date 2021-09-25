@@ -64,7 +64,7 @@ main()
         m_player = 0;
 
         //BLACK's turn
-        m = calc_best_move(board, board.wtm);
+        m = get_best_move(board, board.wtm);
 
         board = apply_move(board, m, board.wtm);
 

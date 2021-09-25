@@ -16,25 +16,19 @@
  * @return Evaluation score
 **/
 move
-evaluate(chessboard board, move color) {
+evaluate(chessboard board) {
     int score = 0;
     score +=  pop_cnt(board.wp) * p_val
             + pop_cnt(board.wn) * n_val
             + pop_cnt(board.wb) * b_val
             + pop_cnt(board.wr) * r_val
             + pop_cnt(board.wq) * q_val
-            + pop_cnt(board.wk) * k_val;
-    score -= pop_cnt(board.bp) * p_val
-            + pop_cnt(board.bn) * n_val
-            + pop_cnt(board.bb) * b_val
-            + pop_cnt(board.br) * r_val
-            + pop_cnt(board.bq) * q_val
-            + pop_cnt(board.bk) * k_val;
-    if (color == WHITE) {
-        return score;
-    } else {
-        return -score;
-    }
-    printf("Scoring ERROR");
-    return 0;
+            + pop_cnt(board.wk) * k_val
+            - pop_cnt(board.bp) * p_val
+            - pop_cnt(board.bn) * n_val
+            - pop_cnt(board.bb) * b_val
+            - pop_cnt(board.br) * r_val
+            - pop_cnt(board.bq) * q_val
+            - pop_cnt(board.bk) * k_val;
+    return score;
 }

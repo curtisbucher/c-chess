@@ -10,6 +10,8 @@
 #ifndef FUNCTIONS_H_INCLUDED
 #define FUNCTIONS_H_INCLUDED
 
+
+void print_progress(int index, int total, unsigned long num_checked, double time, int width);
 void print_header(void);
 void clear_screen(void);
 void print_board(const chessboard board, bool wtp);

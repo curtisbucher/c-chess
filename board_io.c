@@ -12,6 +12,18 @@ void print_header()
 \tBy Curtis Bucher                                                            MIT License 2021\n\n");
 }
 
+void print_progress(int index, int total, unsigned long num_checked, double time, int width){
+    int i;
+    int percent = (int)((float)index / (float)total * 100);
+    int bar_width = (int)((float)percent / 100 * width);
+
+    for(i = 0; i < bar_width; i++)printf("█");
+    for(i = bar_width; i < width; i++)printf("▒");
+    printf("%d%%\n%lu positions\n%f s\n%f pos/s", percent, num_checked, time, num_checked / time);
+    printf("\033[F\033[F\033[F");
+    fflush(stdout);
+}
+
 void clear_screen(){
     printf("\e[1;1H\e[2J");
 }
